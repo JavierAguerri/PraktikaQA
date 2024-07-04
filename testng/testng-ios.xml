@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="iOS regression suite">
+    <test name="All tests">
+        <parameter name="platform" value="${platform}"/> <!-- pass the platform variable from pom.xml -->
+        <packages>
+            <package name="com.javieraguerri.praktika.tests">
+            </package>
+        </packages>
+    </test>
+</suite>

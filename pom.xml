@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.javieraguerri.praktika</groupId>
+    <artifactId>testPraktika</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <version.appium>9.2.3</version.appium>
+        <version.testng>7.9.0</version.testng>
+        <version.assertj>3.25.3</version.assertj>
+        <version.allure-testng>2.26.0</version.allure-testng>
+        <version.log4j>2.23.1</version.log4j>
+        <version.aspectj>1.9.22</version.aspectj>
+        <version.maven.clean.plugin>3.3.2</version.maven.clean.plugin>
+        <version.maven.compiler.plugin>3.13.0</version.maven.compiler.plugin>
+        <version.maven.surefire.plugin>3.2.5</version.maven.surefire.plugin>
+        <version.maven.allure.plugin>2.12.0</version.maven.allure.plugin>
+    </properties>
+
+    <dependencies>
+        <!-- Appium: mobile automation framework
+         It allows to execute automated cross-platform tests on mobile environments by leveraging the webdriver protocol-->
+        <dependency>
+            <groupId>io.appium</groupId>
+            <artifactId>java-client</artifactId>
+            <version>${version.appium}</version>
+            <scope>test</scope> <!-- this means the dependency is only required for compiling and running tests  -->
+        </dependency>
+
+        <!-- TestNG: test runner
+         It provides things such as test annotation, grouping, parallelization and parametrization. It allows tests to be automatically executed as part of the build process -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${version.testng}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- AssertJ: assertions library
+         It enhances the assertion capabilities with features such as fluent API, object type-specific assertions, soft assertions, etc.  -->
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${version.assertj}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- Allure: reports library
+         It generates detailed and visually appealing and feature-rich test execution reports -->
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-testng</artifactId>
+            <version>${version.allure-testng}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- Log4j: logging tool
+         It provides better and consistent logs which include metrics, execution aggregation, and integration with reporting tools  -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${version.log4j}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${version.log4j}</version>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>android</id>
+            <properties>
+                <platform>android</platform>
+            </properties>
+        </profile>
+        <profile>
+            <id>ios</id>
+            <properties>
+                <platform>ios</platform>
+            </properties>
+        </profile>
+    </profiles>
+
+    <build>
+        <plugins>
+            <!-- Maven Clean Plugin
+            It cleans the target directory before building -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>${version.maven.clean.plugin}</version>
+            </plugin>
+            <!-- Maven compiler plugin
+              It tells maven to use the specified Java version for building -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${version.maven.compiler.plugin}</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
+            </plugin>
+            <!-- Surefire plugin
+             It manages the testing process during a Maven build -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${version.maven.surefire.plugin}</version>
+                <configuration>
+                    <testNGArtifactName>org.testng:testng</testNGArtifactName> <!-- It tells maven to use TestNG as test runner -->
+                    <suiteXmlFiles>
+                        <suiteXmlFile>testng/testng-${platform}.xml</suiteXmlFile> <!-- Use this file as testNG configuration -->
+                    </suiteXmlFiles>
+                    <systemPropertyVariables>
+                        <platform>${platform}</platform> <!-- Pass system property "platform" to test execution -->
+                    </systemPropertyVariables>
+                    <argLine>
+                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${version.aspectj}/aspectjweaver-${version.aspectj}.jar"
+                    </argLine>
+                </configuration>
+                <!-- Aspectj: aspects integration
+                 It weaves Allure's reporting capabilities directly in the test methods  -->
+                <dependencies>
+                    <dependency>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjweaver</artifactId>
+                        <version>${version.aspectj}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <!-- Antrun plugin
+             It allows to integrate ant tasks for custom build logic -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <configuration>
+                            <target>
+                                <fail message="You must specify a valid platform maven property ('android' or 'ios'), e.g.: mvn clean test -P android">
+                                    <condition>
+                                        <not>
+                                            <isset property="platform"/>
+                                        </not>
+                                    </condition>
+                                </fail>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
