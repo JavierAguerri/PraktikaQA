@@ -28,13 +28,6 @@ public class PageObjectManager {
         return instance;
     }
 
-    public WelcomePage getWelcomePage() {
-        if (welcomePage == null) {
-            welcomePage = new WelcomePage(driver);
-        }
-        return welcomePage;
-    }
-
     public PermissionsPage getPermissionsPage() {
         if (permissionsPage == null) {
             String platform = driver.getCapabilities().getPlatformName().toString();
@@ -50,38 +43,12 @@ public class PageObjectManager {
         return permissionsPage;
     }
 
-    public OnboardingGenderPage getOnboardingGenderPage() {
-        if (onboardingGenderPage == null) {
-            onboardingGenderPage = new OnboardingGenderPage(driver);
+    public <T> T getPage(Class<T> pageClass) {
+        try {
+            T page = pageClass.getDeclaredConstructor(AppiumDriver.class).newInstance(driver);
+            return page;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create page: " + pageClass.getSimpleName(), e);
         }
-        return onboardingGenderPage;
-    }
-
-    public OnboardingAgePage getOnboardingAgePage() {
-        if (onboardingAgePage == null) {
-            onboardingAgePage = new OnboardingAgePage(driver);
-        }
-        return onboardingAgePage;
-    }
-
-    public OnboardingNamePage getOnboardingNamePage() {
-        if (onboardingNamePage == null) {
-            onboardingNamePage = new OnboardingNamePage(driver);
-        }
-        return onboardingNamePage;
-    }
-
-    public OnboardingLanguagePage getOnboardingLanguagePage() {
-        if (onboardingLanguagePage == null) {
-            onboardingLanguagePage = new OnboardingLanguagePage(driver);
-        }
-        return onboardingLanguagePage;
-    }
-
-    public OnboardingInterestsPage getOnboardingInterestsPage() {
-        if (onboardingInterestsPage == null) {
-            onboardingInterestsPage = new OnboardingInterestsPage(driver);
-        }
-        return onboardingInterestsPage;
     }
 }

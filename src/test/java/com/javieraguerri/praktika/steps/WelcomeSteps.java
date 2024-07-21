@@ -12,7 +12,7 @@ public class WelcomeSteps {
 
     public WelcomeSteps() {
         PageObjectManager pageObjectManager = PageObjectManager.getInstance();
-        this.welcomePage = pageObjectManager.getWelcomePage();
+        this.welcomePage = pageObjectManager.getPage(WelcomePage.class);
     }
 
     @Step("Get started")
