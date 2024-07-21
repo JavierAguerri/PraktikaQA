@@ -19,15 +19,19 @@ public class OnboardingLanguagePage extends BasePage {
         PageFactory.initElements(new AppiumFieldDecorator(driver), this);
     }
 
-    public void searchLanguage(String language) {
+    public OnboardingLanguagePage searchLanguage(String language) {
         waitAndInputText(searchTextInput, language);
+        return this;
     }
 
-    public void chooseSpanishLanguage() { // continue is a reserved keyword
+    public OnboardingLanguagePage chooseSpanishLanguage() {
         waitAndClick(spanishButton);
+        return this;
     }
 
-    public void switchToSpanish() { // continue is a reserved keyword
+    public OnboardingLanguagePage switchToSpanish() {
         waitAndClick(switchToSpanishButton);
+        return this;
     }
 }
+

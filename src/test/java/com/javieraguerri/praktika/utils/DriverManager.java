@@ -14,6 +14,8 @@ public class DriverManager {
 
     private static AppiumDriver driver;
 
+    private DriverManager() {}
+
     public static void initialize(String platform) throws MalformedURLException {
         if (driver == null) {
             driver = startDriver(platform);

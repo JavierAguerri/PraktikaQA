@@ -17,38 +17,42 @@ public class OnboardingSteps {
 
     public OnboardingSteps() {
         PageObjectManager pageObjectManager = PageObjectManager.getInstance();
-        this.onboardingGenderPage = pageObjectManager.getOnboardingGenderPage();
-        this.onboardingAgePage = pageObjectManager.getOnboardingAgePage();
-        this.onboardingNamePage = pageObjectManager.getOnboardingNamePage();
-        this.onboardingLanguagePage = pageObjectManager.getOnboardingLanguagePage();
-        this.onboardingInterestsPage = pageObjectManager.getOnboardingInterestsPage();
+        this.onboardingGenderPage = pageObjectManager.getPage(OnboardingGenderPage.class);
+        this.onboardingAgePage = pageObjectManager.getPage(OnboardingAgePage.class);
+        this.onboardingNamePage = pageObjectManager.getPage(OnboardingNamePage.class);
+        this.onboardingLanguagePage = pageObjectManager.getPage(OnboardingLanguagePage.class);
+        this.onboardingInterestsPage = pageObjectManager.getPage(OnboardingInterestsPage.class);
     }
 
     @Step("Choose gender: Female")
-    public void chooseGenderFemale() {
+    public OnboardingSteps chooseGenderFemale() {
         logger.info("Choosing gender: Female");
         onboardingGenderPage.chooseFemale();
+        return this;
     }
 
     @Step("Choose age: 25 to 34")
-    public void chooseAge25to34() {
+    public OnboardingSteps chooseAge25to34() {
         logger.info("Choosing age: 25 to 34");
         onboardingAgePage.choose25to34();
+        return this;
     }
 
     @Step("Input name: {0}")
-    public void inputName(String name) {
+    public OnboardingSteps inputName(String name) {
         logger.info("Input name: " + name);
         onboardingNamePage.inputName(name);
         onboardingNamePage.proceed();
+        return this;
     }
 
     @Step("Search and choose language: {0}")
-    public void searchAndChooseLanguage(String language) {
+    public OnboardingSteps searchAndChooseLanguage(String language) {
         logger.info("Searching and choosing language: " + language);
-        onboardingLanguagePage.searchLanguage(language);
-        onboardingLanguagePage.chooseSpanishLanguage();
-        onboardingLanguagePage.switchToSpanish();
+        onboardingLanguagePage.searchLanguage(language)
+                .chooseSpanishLanguage()
+                .switchToSpanish();
+        return this;
     }
 
     @Step("Verify Interests page is visible")
@@ -57,3 +61,4 @@ public class OnboardingSteps {
         assertThat(onboardingInterestsPage.isVisibleTitleText()).isTrue();
     }
 }
+

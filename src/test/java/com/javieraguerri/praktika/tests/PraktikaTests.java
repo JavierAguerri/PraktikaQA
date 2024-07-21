@@ -32,14 +32,13 @@ public class PraktikaTests extends BaseTest {
         PermissionsSteps permissionsSteps = new PermissionsSteps();
         permissionsSteps.allowNotifications();
         OnboardingSteps onboardingSteps = new OnboardingSteps();
-        onboardingSteps.chooseGenderFemale();
-        onboardingSteps.chooseAge25to34();
-        onboardingSteps.inputName("Maria");
-        onboardingSteps.searchAndChooseLanguage("Spanish");
-        onboardingSteps.verifyInterestsPageVisible();
+        onboardingSteps.chooseGenderFemale()
+                .chooseAge25to34()
+                .inputName("Maria")
+                .searchAndChooseLanguage("Spanish")
+                .verifyInterestsPageVisible();
         Utils.createAndAttachScreenshot(LANGUAGE_CHANGED);
         logger.info("Completed test: getStartedAndChangeLanguageThroughOnboardingTest");
-        // this test is meant to pass
     }
 
     @Test(priority = 2, description = "Demo test to illustrate a failed case")
@@ -58,12 +57,12 @@ public class PraktikaTests extends BaseTest {
             "\nBroken cases cannot be completed due to issues other than assertion failures, such as exceptions, errors, or other interruptions.")
     public void brokenTest() {
         logger.info(" *** --- brokenTest");
-        WelcomePage welcomePage = pageObjectManager.getWelcomePage();
+        WelcomePage welcomePage = pageObjectManager.getPage(WelcomePage.class);
         welcomePage.getStarted();
         PermissionsPage permissionsPage = pageObjectManager.getPermissionsPage();
         permissionsPage.allowPermission();
         // Element won't be found - this test is meant to be broken
-        OnboardingAgePage onboardingAgePage = pageObjectManager.getOnboardingAgePage();
+        OnboardingAgePage onboardingAgePage = pageObjectManager.getPage(OnboardingAgePage.class);
         onboardingAgePage.choose25to34();
     }
 }
